@@ -20,6 +20,7 @@ class MovieTableViewCell: UITableViewCell {
     var onFavorite: (() -> Void)?
     
     private var apiMovie: APIMovie?
+    private var movie: Movie?
     
     private var heart = UIImage(systemName: "heart")
     private var favoritedHeart = UIImage(systemName: "heart.fill")
@@ -32,6 +33,20 @@ class MovieTableViewCell: UITableViewCell {
         posterImageView.kf.setImage(with: movie.posterURL, placeholder: placeholder)
         titleLabel.text = movie.title
         yearLabel.text = movie.year
+        if MovieController.shared.favoriteMovie(from: movie)?.imdbID == movie.imdbID {
+            setFavorite()
+        } else {
+            setUnFavorite()
+        }
+    }
+    
+    func update(with movie: Movie, onFavorite: (() -> Void)?) {
+        self.movie = movie
+        self.onFavorite = onFavorite
+        posterImageView.kf.setImage(with: movie.posterURL, placeholder: placeholder)
+        titleLabel.text = movie.title
+        yearLabel.text = movie.year
+        setFavorite()
     }
 
     func setFavorite() {

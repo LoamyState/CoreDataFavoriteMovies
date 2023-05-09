@@ -32,12 +32,12 @@ class MovieSearchViewController: UIViewController {
         navigationItem.searchController = searchController
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         var snapshot = datasource.snapshot()
         guard !snapshot.sectionIdentifiers.isEmpty else { return }
         snapshot.reloadSections([0])
-        datasource?.apply(snapshot)
+        datasource?.apply(snapshot, animatingDifferences: true)
     }
     
 }
@@ -81,8 +81,13 @@ private extension MovieSearchViewController {
     }
 
     func toggleFavorite(_ movie: APIMovie) {
-        print("SEE! I knew you liked \(movie.title)!")
-        // TODO: Save movie to core data so it can become a favorite
+        if let favoritedMovie = movieController.favoriteMovie(from: movie) {
+            movieController.unfavoriteMovie(favoritedMovie)
+        } else {
+            movieController.favoriteMovie(movie)
+        }
+        
+        reload(movie)
     }
     
     func reload(_ movie: APIMovie) {

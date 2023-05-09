@@ -7,6 +7,18 @@
 
 import Foundation
 
+struct SearchResponse: Codable {
+    let movies: [APIMovie]
+    let totalResults: String
+    let response: String
+    
+    enum CodingKeys: String, CodingKey {
+        case movies = "Search"
+        case totalResults
+        case response = "Response"
+    }
+}
+
 struct APIMovie: Codable, Identifiable, Hashable {
     let title: String
     let year: String
@@ -22,4 +34,14 @@ struct APIMovie: Codable, Identifiable, Hashable {
         case posterURL = "Poster"
     }
 
+}
+
+extension Movie {
+    var posterURL: URL? {
+        if let posterURLString = self.posterURLString, let url = URL(string: posterURLString) {
+            return url
+        } else {
+            return nil
+        }
+    }
 }
